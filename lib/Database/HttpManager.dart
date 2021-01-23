@@ -8,9 +8,12 @@ class HttpManager {
         .replaceAll('.', 'dot')
         .replaceAll(':', 'colon')
         .replaceAll('-', 'dash')
-        .replaceAll('&', 'ampersand');
+        .replaceAll('&', 'ampersand')
+        .replaceAll('%', 'per')
+        .replaceAll('?', 'ques');
 
-    String baseUrl = 'http://127.0.0.1:5000/number-plate/';
+    String baseUrl = 'http://10.0.0.127:5000/number-plate/';
+    print("URL is ${baseUrl + url}");
     http.Response res = await http.get(baseUrl + url);
     return res.body;
   }

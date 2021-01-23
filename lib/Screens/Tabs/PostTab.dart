@@ -345,6 +345,7 @@ class _PostTabState extends State<PostTab> {
                     print("Submit to police");
                     manager.uploadPost(post);
                     manager.uploadFiles(files, now);
+                    manager.uploadNumberPlate(numberPlate);
                   },
                   color: Color(0xFF8be9fd),
                   shape: RoundedRectangleBorder(

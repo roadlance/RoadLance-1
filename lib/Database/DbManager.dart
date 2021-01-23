@@ -199,7 +199,7 @@ class DatabaseManager {
   }
 
   Future uploadUrl(String url) async {
-    List<String> urls;
+    List urls;
     String firstMediaTime;
 
     await FirebaseFirestore.instance
@@ -267,7 +267,7 @@ class DatabaseManager {
   Future getNumberPlate(File file, Timestamp time) async {
     String numberPlate;
     String url;
-    String path = 'Images/${time.toDate().toString()}/Media';
+    String path = 'TempNumberPlateFolder/${time.toDate().toString()}/Media';
     try {
       await firebase_storage.FirebaseStorage.instance.ref(path).putFile(file);
       print("Successfully added media files");
@@ -284,5 +284,32 @@ class DatabaseManager {
       }
     }
     return 'No Number Plate Found.';
+  }
+
+  uploadNumberPlate(String numberPlate) async {
+    String firstMediaTime;
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        print('Document data: $data');
+        firstMediaTime = data['FirstMediaTime'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .collection('Posts')
+        .doc(firstMediaTime)
+        .update({'NumberPlate': numberPlate})
+        .then((value) => print("Updated Number Plate"))
+        .catchError((error) => print("Failed to add Number Plate: $error"));
   }
 }

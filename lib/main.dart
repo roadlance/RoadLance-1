@@ -16,7 +16,7 @@ class RoadLance extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Roadlance',
       home: Scaffold(
-        body: Register(),
+        body: Login(),
       ),
     );
   }

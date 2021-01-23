@@ -69,7 +69,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Karla-Medium
+    - family: Karla-Regular
       fonts:
         - asset: assets/fonts/Karla-Medium.ttf
   #   - family: Trajan Pro

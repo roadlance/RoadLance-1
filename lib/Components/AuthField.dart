@@ -22,8 +22,9 @@ class _AuthFieldState extends State<AuthField> {
       padding: const EdgeInsets.only(bottom: 15.0),
       child: SizedBox(
         width: 325,
-        height: 4,
+        height: 40,
         child: TextField(
+          controller: widget.controller,
           textAlign: TextAlign.center,
           textAlignVertical: TextAlignVertical.center,
           style: TextStyle(

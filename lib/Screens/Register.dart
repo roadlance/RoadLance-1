@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Components/AuthField.dart';
 import './Login.dart';
+import '../Database/AuthManager.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -40,22 +41,22 @@ class _RegisterState extends State<Register> {
                 isPassword: false,
               ),
               AuthField(
-                controller: firstNameController,
+                controller: lastNameController,
                 placeholder: 'Last name..',
                 isPassword: false,
               ),
               AuthField(
-                controller: firstNameController,
+                controller: emailController,
                 placeholder: 'Email..',
                 isPassword: false,
               ),
               AuthField(
-                controller: firstNameController,
+                controller: phoneNumberController,
                 placeholder: 'Phone number..',
                 isPassword: false,
               ),
               AuthField(
-                controller: firstNameController,
+                controller: passwordController,
                 placeholder: 'Password..',
                 isPassword: true,
               ),
@@ -64,7 +65,16 @@ class _RegisterState extends State<Register> {
                 child: SizedBox(
                   width: 125,
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      AuthManager manager = AuthManager();
+                      manager.register(
+                        firstNameController.text,
+                        lastNameController.text,
+                        emailController.text,
+                        passwordController.text,
+                        phoneNumberController.text,
+                      );
+                    },
                     color: Color(0xFF8be9fd),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
@@ -80,16 +90,16 @@ class _RegisterState extends State<Register> {
                 ),
               ),
               GestureDetector(
-                  child: Text(
-                    'Login here!',
-                    style: TextStyle(
-                      color: Color(0xFF50fa7b),
-                    ),
+                child: Text(
+                  'Login here!',
+                  style: TextStyle(
+                    color: Color(0xFF50fa7b),
                   ),
-                  onTap: () {
-                    print("Going to Login screen");
-                    Navigator.pop(context);
-                  }),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
             ],
           ),
         ),

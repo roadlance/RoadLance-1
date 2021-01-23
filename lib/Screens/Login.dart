@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'Register.dart';
 import '../Components/AuthField.dart';
+import '../Database/AuthManager.dart';
+import './Home.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -10,6 +12,22 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController emailController;
   TextEditingController passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    AuthManager manager = AuthManager();
+    Future.delayed(Duration.zero, () async {
+      if (await manager.getCurrentUser() != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeScreen(),
+          ),
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +63,11 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    AuthManager manager = AuthManager();
+                    manager.login(
+                        emailController.text, passwordController.text);
+                  },
                   color: Color(0xFF8be9fd),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),

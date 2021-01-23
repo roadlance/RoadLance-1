@@ -79,7 +79,7 @@ class _RegisterState extends State<Register> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => HomeScreen(
-                            showWelcomePopup: false,
+                            showWelcomePopup: true,
                           ),
                         ),
                       );

@@ -3,6 +3,7 @@ import './Tabs/HomeTab.dart';
 import './Tabs/PostTab.dart';
 import './Tabs/ProfileTab.dart';
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
   HomeScreen({
     this.showWelcomePopup,
@@ -14,6 +15,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () {
+      if (widget.showWelcomePopup == true) {
+        showWelcomePopup();
+      } else {
+        setState(() {
+          tab = PostTab();
+        });
+      }
+    });
+  }
+
   void showWelcomePopup() {
     String text = '''
 We're glad you're onboard with us! Here's how you can get started!
@@ -30,30 +45,63 @@ View your recent posts from the home tab too!
     ''';
 
     showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       context: context,
       builder: (context) => Container(
-        child: Text(
-          'Welcome To RoadLance!',
-          style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Karla-Medium',
-            fontSize: 23,
+        height: 500,
+        decoration: BoxDecoration(
+          color: Color(0xFF4b4266),
+          border: Border.all(
+            color: Color(0xFFff79c6),
+            width: 3.0,
+          ),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
           ),
         ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 15),
+              child: Text(
+                'Welcome To RoadLance!',
+                style: TextStyle(
+                  color: Color(0xFF50fa7b),
+                  fontFamily: 'Karla-Medium',
+                  fontSize: 26,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontFamily: 'Karla-Medium',
+                  fontSize: 17,
+                ),
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          ],
+        ),
       ),
-    );
+    ).whenComplete(() {
+      print("Modal closed!");
+      setState(() {
+        tab = PostTab();
+      });
+    });
   }
 
   int _selectedIndex = 0;
   Widget tab;
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      tab = PostTab();
-    });
-  }
 
   void onItemTapped(int index) {
     print("New index is $index");

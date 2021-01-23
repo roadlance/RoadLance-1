@@ -66,6 +66,14 @@ class _PostTabState extends State<PostTab> {
     showDialog(
       context: context,
       child: Dialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          side: BorderSide(
+            color: Colors.white,
+            width: 2,
+          ),
+        ),
         child: SizedBox(
           width: 100,
           height: 250,
@@ -77,6 +85,12 @@ class _PostTabState extends State<PostTab> {
                 height: 125,
                 width: 300,
                 child: FlatButton.icon(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15),
+                      topLeft: Radius.circular(15),
+                    ),
+                  ),
                   color: Colors.black,
                   onPressed: () async {
                     Navigator.pop(context);
@@ -107,6 +121,12 @@ class _PostTabState extends State<PostTab> {
                 width: 300,
                 child: FlatButton.icon(
                   color: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
+                  ),
                   onPressed: () async {
                     Navigator.pop(context);
                     File video = await addVideo();
@@ -542,7 +562,7 @@ class _PostTabState extends State<PostTab> {
                     child: SizedBox(
                       width: 325,
                       child: TextField(
-                        maxLines: null,
+                        // maxLines: null,
                         textAlign: TextAlign.left,
                         textAlignVertical: TextAlignVertical.center,
                         style: TextStyle(

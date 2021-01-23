@@ -343,9 +343,10 @@ class _PostTabState extends State<PostTab> {
                       uploadTime: now,
                     );
                     print("Submit to police");
-                    manager.uploadPost(post);
-                    manager.uploadFiles(files, now);
-                    manager.uploadNumberPlate(numberPlate);
+                    await manager.uploadPost(post);
+                    await manager.uploadFiles(files, now);
+                    await manager.uploadNumberPlate(numberPlate);
+                    await manager.uploadPostToPolice(post, now);
                   },
                   color: Color(0xFF8be9fd),
                   shape: RoundedRectangleBorder(

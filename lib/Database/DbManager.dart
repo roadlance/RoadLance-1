@@ -312,4 +312,75 @@ class DatabaseManager {
         .then((value) => print("Updated Number Plate"))
         .catchError((error) => print("Failed to add Number Plate: $error"));
   }
+
+  Future uploadPostToPolice(Post post, Timestamp uploadTime) async {
+    CollectionReference policeRef =
+        FirebaseFirestore.instance.collection('Police');
+    String phoneNumber;
+    List urls;
+    String firstMediaTime;
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        print('Document data: $data');
+        firstMediaTime = data['FirstMediaTime'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        print('Document data: $data');
+        phoneNumber = data['PhoneNumber'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .collection('Posts')
+        .doc(firstMediaTime)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        var data = documentSnapshot.data();
+        print('Document data: $data');
+        urls = data['Media-Urls'];
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+
+    policeRef
+        .doc(uploadTime.toDate().toString())
+        .set({
+          'Violation': post.violation,
+          'Description': post.description,
+          'Media-Urls': urls,
+          'Media-Details': post.mediaDetails,
+          'PhoneNumber': phoneNumber,
+          'NumberPlate': post.numberPlate,
+          'Uid': auth.currentUser.uid,
+          'Email': auth.currentUser.email,
+          'Latitude': post.latitude,
+          'Longitude': post.longitude,
+          'UploadTime': uploadTime.toDate().toString(),
+          'Status': post.status,
+        })
+        .then((value) => print("Police details saved to Firestore"))
+        .catchError((error) => print("Failed to add Police details: $error"));
+  }
 }

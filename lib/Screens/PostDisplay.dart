@@ -15,6 +15,6 @@ class PostDisplay extends StatefulWidget {
 class _PostDisplayState extends State<PostDisplay> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold();
   }
 }

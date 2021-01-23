@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import './Screens/Register.dart';
 import './Screens/Login.dart';
 
 void main() async {

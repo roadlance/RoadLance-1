@@ -10,8 +10,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController emailController;
-  TextEditingController passwordController;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
 
   @override
   void initState() {
@@ -66,19 +66,33 @@ class _LoginState extends State<Login> {
                   onPressed: () {
                     AuthManager manager = AuthManager();
                     manager.login(
-                        emailController.text, passwordController.text);
+                      emailController.text,
+                      passwordController.text,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                    );
                   },
                   color: Color(0xFF8be9fd),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Text('Register'),
+                  child: Text('Login'),
                 ),
               ),
-              Text("Don't have an account?"),
-              FlatButton(
-                child: Text('Register here!'),
-                onPressed: () {
+              Text(
+                "Don't have an account?",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              GestureDetector(
+                child: Text('Register here!',
+                    style: TextStyle(color: Color(0xFF50fa7b))),
+                onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Post {
   Post({
     this.violation,
@@ -15,9 +17,9 @@ class Post {
   final String description;
   final String status;
   final List mediaUrls;
-  final Map mediaDetails;
+  final List<Map> mediaDetails;
   final String numberPlate;
   final double latitude;
   final double longitude;
-  final DateTime uploadTime;
+  final Timestamp uploadTime;
 }

@@ -36,9 +36,15 @@ class _PostTabState extends State<PostTab> {
   File image;
   File video;
   int images = 0;
+  int videos = 0;
   List<File> files = [];
   List<Map> mediaDetails = [];
+  Map mediaTypes = {};
   VideoPlayerController controller;
+  double chanceOfApproval = 0;
+  double evidenceQuantity = 0;
+  double numberPlatePresent = 0;
+  double descriptionPresent = 0;
 
   @override
   void initState() {
@@ -68,10 +74,13 @@ class _PostTabState extends State<PostTab> {
                     Navigator.pop(context);
                     File image = await addImage();
                     setState(() {
-                      mediaFiles.add(MediaPlayer(
+                      mediaFiles.add(
+                        MediaPlayer(
                           image: image,
                           mediaType: 'image',
-                          playButtonVisible: false));
+                          playButtonVisible: false,
+                        ),
+                      );
                     });
                   },
                   icon: Icon(
@@ -90,6 +99,7 @@ class _PostTabState extends State<PostTab> {
                 child: FlatButton.icon(
                   color: Colors.green,
                   onPressed: () async {
+                    Navigator.pop(context);
                     File video = await addVideo();
                     controller = VideoPlayerController.file(video)
                       ..initialize().then((_) {
@@ -102,7 +112,6 @@ class _PostTabState extends State<PostTab> {
                           ));
                         });
                       });
-                    Navigator.pop(context);
                   },
                   icon: Icon(
                     Icons.video_call_rounded,
@@ -129,6 +138,7 @@ class _PostTabState extends State<PostTab> {
     if (pickedFile != null) {
       setState(() {
         image = File(pickedFile.path);
+        numberPlateVisible = true;
       });
       if (image != null) {
         print("Image successfully picked => $image");
@@ -137,24 +147,115 @@ class _PostTabState extends State<PostTab> {
         setState(() {
           files.add(image);
           images = images + 1;
+          mediaTypes.addAll({'images': images});
           mediaDetails.add({
             'Latitude': currentPos.latitude,
             'Longitude': currentPos.longitude,
             'MediaUploadTime': now,
+            'mediaType': 'image',
           });
         });
-        if (images == 1) {
+        if (images == 1 && videos == 0) {
           manager.createMediaDetails(mediaDetails, now);
         } else {
           manager.updateMediaDetails(mediaDetails, now);
         }
-        // get number plate
         String numberPlateRef =
             await manager.getNumberPlate(image, Timestamp.now());
 
         setState(() {
           numberPlate = numberPlateRef;
         });
+
+        switch (images + videos) {
+          case 0:
+            setState(() {
+              evidenceQuantity = 0;
+              chanceOfApproval = (chanceOfApproval * 0.35) +
+                  (numberPlatePresent * 0.35) +
+                  (descriptionPresent * 0.1);
+            });
+            break;
+          case 1:
+            if (images == 1) {
+              setState(() {
+                evidenceQuantity = 20;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else {
+              setState(() {
+                evidenceQuantity = 30;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            }
+            break;
+          case 2:
+            if (images == 1) {
+              setState(() {
+                evidenceQuantity = 50;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 2) {
+              setState(() {
+                evidenceQuantity = 40;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 0) {
+              setState(() {
+                evidenceQuantity = 60;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            }
+            break;
+          case 3:
+            if (images == 1) {
+              setState(() {
+                evidenceQuantity = 80;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 2) {
+              setState(() {
+                evidenceQuantity = 70;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 3) {
+              setState(() {
+                evidenceQuantity = 60;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else {
+              setState(() {
+                evidenceQuantity = 90;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            }
+            break;
+          default:
+            setState(() {
+              evidenceQuantity = 100;
+              chanceOfApproval = (chanceOfApproval * 0.35) +
+                  (numberPlatePresent * 0.35) +
+                  (descriptionPresent * 0.1);
+            });
+        }
       }
     } else {
       print('No image selected.');
@@ -164,16 +265,130 @@ class _PostTabState extends State<PostTab> {
 
   Future<File> addVideo() async {
     final pickedFile = await picker.getVideo(source: ImageSource.camera);
+    DatabaseManager manager = DatabaseManager();
+    Timestamp now = Timestamp.now();
+
     if (pickedFile != null) {
       setState(() {
         video = File(pickedFile.path);
       });
       if (video != null) {
+        print("Video successfully picked => $video");
+        Locator locator = Locator();
+        Position currentPos = await locator.getCurrentPosition();
         setState(() {
           files.add(video);
+          videos = videos + 1;
+          mediaTypes.addAll({'videos': images});
+          mediaDetails.add({
+            'Latitude': currentPos.latitude,
+            'Longitude': currentPos.longitude,
+            'MediaUploadTime': now,
+            'mediaType': 'video',
+          });
         });
+        if (images == 0 && videos == 1) {
+          manager.createMediaDetails(mediaDetails, now);
+        } else {
+          manager.updateMediaDetails(mediaDetails, now);
+        }
+
+        if (numberPlate == 'Scanning number plates..') {
+          setState(() {
+            numberPlate = 'No Number Plate Found.';
+          });
+        }
+
+        switch (images + videos) {
+          case 0:
+            setState(() {
+              evidenceQuantity = 0;
+              chanceOfApproval = (chanceOfApproval * 0.35) +
+                  (numberPlatePresent * 0.35) +
+                  (descriptionPresent * 0.1);
+            });
+            break;
+          case 1:
+            if (images == 1) {
+              setState(() {
+                evidenceQuantity = 20;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else {
+              setState(() {
+                evidenceQuantity = 30;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            }
+            break;
+          case 2:
+            if (images == 1) {
+              setState(() {
+                evidenceQuantity = 50;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 2) {
+              setState(() {
+                evidenceQuantity = 40;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 0) {
+              setState(() {
+                evidenceQuantity = 60;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            }
+            break;
+          case 3:
+            if (images == 1) {
+              setState(() {
+                evidenceQuantity = 80;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 2) {
+              setState(() {
+                evidenceQuantity = 70;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else if (images == 3) {
+              setState(() {
+                evidenceQuantity = 60;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            } else {
+              setState(() {
+                evidenceQuantity = 90;
+                chanceOfApproval = (chanceOfApproval * 0.35) +
+                    (numberPlatePresent * 0.35) +
+                    (descriptionPresent * 0.1);
+              });
+            }
+            break;
+          default:
+            setState(() {
+              evidenceQuantity = 100;
+              chanceOfApproval = (chanceOfApproval * 0.35) +
+                  (numberPlatePresent * 0.35) +
+                  (descriptionPresent * 0.1);
+            });
+        }
       }
-      print('Video successfully picked => $video');
     } else {
       print('No image selected.');
     }
@@ -188,173 +403,178 @@ class _PostTabState extends State<PostTab> {
           canvasColor: Color(0xFF282a36),
         ),
         child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 70),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: DropdownButton<String>(
-                    value: violation,
-                    icon: Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: TextStyle(color: Colors.deepPurple),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.deepPurpleAccent,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 70),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: DropdownButton<String>(
+                      value: violation,
+                      icon: Icon(Icons.arrow_downward),
+                      iconSize: 24,
+                      elevation: 16,
+                      style: TextStyle(color: Colors.deepPurple),
+                      underline: Container(
+                        height: 2,
+                        color: Colors.deepPurpleAccent,
+                      ),
+                      items: violations
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                              color: Color(0xFF8be9fd),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          violation = newValue;
+                        });
+                      },
                     ),
-                    items: violations
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                            color: Color(0xFF8be9fd),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 15),
+                    child: RaisedButton(
+                      onPressed: () {
+                        promptInput(context);
+                      },
+                      color: Color(0xFF8be9fd),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Text('Add Image/Video'),
+                    ),
+                  ),
+                  Column(
+                    children: mediaFiles,
+                  ),
+                  Visibility(
+                    visible: numberPlateVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Number Plate: ",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color(0xFF282a36),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                numberPlate,
+                                style: TextStyle(
+                                  color: Color(0xFF50fa7b),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: SizedBox(
+                      width: 325,
+                      child: TextField(
+                        maxLines: null,
+                        textAlign: TextAlign.left,
+                        textAlignVertical: TextAlignVertical.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'Karla-Medium',
+                        ),
+                        onChanged: (String text) {
+                          print("Description is $text");
+                          description = text;
+                        },
+                        cursorColor: Color(0xFF50fa7b),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          hintText: 'Description..',
+                          hintStyle: TextStyle(
+                            fontFamily: 'Karla-Medium',
+                            color: Colors.grey,
+                          ),
+                          fillColor: Color(0xFF4b4266),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF50fa7b),
+                              width: 3.5,
+                            ),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF50fa7b),
+                              width: 3.5,
+                            ),
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          disabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0xFF50fa7b),
+                              width: 3.5,
+                            ),
+                            borderRadius: BorderRadius.circular(15.0),
                           ),
                         ),
-                      );
-                    }).toList(),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        violation = newValue;
-                      });
-                    },
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 15),
-                  child: RaisedButton(
-                    onPressed: () {
-                      promptInput(context);
+                  Visibility(
+                    visible: errorVisible,
+                    child: Text(
+                      errorMessage,
+                      style: TextStyle(
+                        color: Color(0xFFff5555),
+                      ),
+                    ),
+                  ),
+                  RaisedButton(
+                    onPressed: () async {
+                      DatabaseManager manager = DatabaseManager();
+                      Locator locator = Locator();
+                      Position currentPos = await locator.getCurrentPosition();
+                      Timestamp now = Timestamp.now();
+                      Post post = Post(
+                        violation: violation,
+                        description: description,
+                        status: 'Unknown',
+                        mediaUrls: [],
+                        mediaDetails: mediaDetails,
+                        numberPlate: numberPlate,
+                        latitude: currentPos.latitude,
+                        longitude: currentPos.longitude,
+                        uploadTime: now,
+                      );
+                      print("Submit to police");
+                      await manager.uploadPost(post);
+                      await manager.uploadFiles(files, now);
+                      await manager.uploadNumberPlate(numberPlate);
+                      await manager.uploadPostToPolice(post, now);
                     },
                     color: Color(0xFF8be9fd),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
-                    child: Text('Add Image/Video'),
+                    child: Text('Submit to Police'),
                   ),
-                ),
-                Column(
-                  children: mediaFiles,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Number Plate: ",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Color(0xFF282a36),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            numberPlate,
-                            style: TextStyle(
-                              color: Color(0xFF50fa7b),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: SizedBox(
-                    width: 325,
-                    child: TextField(
-                      maxLines: null,
-                      textAlign: TextAlign.left,
-                      textAlignVertical: TextAlignVertical.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Karla-Medium',
-                      ),
-                      onChanged: (String text) {
-                        print("Description is $text");
-                        description = text;
-                      },
-                      cursorColor: Color(0xFF50fa7b),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        hintText: 'Description..',
-                        hintStyle: TextStyle(
-                          fontFamily: 'Karla-Medium',
-                          color: Colors.grey,
-                        ),
-                        fillColor: Color(0xFF4b4266),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF50fa7b),
-                            width: 3.5,
-                          ),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF50fa7b),
-                            width: 3.5,
-                          ),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0xFF50fa7b),
-                            width: 3.5,
-                          ),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: errorVisible,
-                  child: Text(
-                    errorMessage,
-                    style: TextStyle(
-                      color: Color(0xFFff5555),
-                    ),
-                  ),
-                ),
-                RaisedButton(
-                  onPressed: () async {
-                    DatabaseManager manager = DatabaseManager();
-                    Locator locator = Locator();
-                    Position currentPos = await locator.getCurrentPosition();
-                    Timestamp now = Timestamp.now();
-                    Post post = Post(
-                      violation: violation,
-                      description: description,
-                      status: 'Unknown',
-                      mediaUrls: [],
-                      mediaDetails: mediaDetails,
-                      numberPlate: numberPlate,
-                      latitude: currentPos.latitude,
-                      longitude: currentPos.longitude,
-                      uploadTime: now,
-                    );
-                    print("Submit to police");
-                    await manager.uploadPost(post);
-                    await manager.uploadFiles(files, now);
-                    await manager.uploadNumberPlate(numberPlate);
-                    await manager.uploadPostToPolice(post, now);
-                  },
-                  color: Color(0xFF8be9fd),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Text('Submit to Police'),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

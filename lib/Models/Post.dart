@@ -17,7 +17,7 @@ class Post {
   final String description;
   final String status;
   final List mediaUrls;
-  final List<Map> mediaDetails;
+  final List mediaDetails;
   final String numberPlate;
   final double latitude;
   final double longitude;

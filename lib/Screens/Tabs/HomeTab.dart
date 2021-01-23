@@ -13,7 +13,7 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   User currentUser;
 
-  void setCurrentUser() async {
+  Future setCurrentUser() async {
     AuthManager manager = AuthManager();
     User user = await manager.getCurrentUser();
     setState(() {
@@ -22,43 +22,62 @@ class _HomeTabState extends State<HomeTab> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration.zero, () async {
+      await setCurrentUser();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Users')
-            .doc(currentUser.uid)
-            .collection('Posts')
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return ListView(
-              children: snapshot.data.docs.map((
-                QueryDocumentSnapshot document,
-              ) {
-                var data = document.data();
-                return PostCard(
-                  post: Post(
-                    violation: data['Violation'],
-                    description: data['Description'],
-                    status: data['Status'],
-                    mediaUrls: data['MediaUrls'],
-                    mediaDetails: data['MediaDetails'],
-                    numberPlate: data['NumberPlate'],
-                    latitude: data['Latitude'],
-                    longitude: data['Longitude'],
-                    uploadTime: data['UploadTime'],
-                  ),
-                );
-              }).toList(),
-            );
-          }
-        },
-      ),
-    );
+    if (currentUser != null) {
+      return Scaffold(
+        backgroundColor: Color(0xFF4b4266),
+        appBar: AppBar(
+          title: Text("Posts"),
+          centerTitle: true,
+          backgroundColor: Color(0xFF312c42),
+        ),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('Users')
+              .doc(currentUser.uid)
+              .collection('Posts')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData || currentUser == null) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return ListView(
+                children: snapshot.data.docs.map((
+                  QueryDocumentSnapshot document,
+                ) {
+                  var data = document.data();
+                  return PostCard(
+                    post: Post(
+                      violation: data['Violation'],
+                      description: data['Description'],
+                      status: data['Status'],
+                      mediaUrls: data['Media-Urls'],
+                      mediaDetails: data['Media-Details'],
+                      numberPlate: data['NumberPlate'],
+                      latitude: data['Latitude'],
+                      longitude: data['Longitude'],
+                      uploadTime: data['UploadTime'],
+                    ),
+                  );
+                }).toList(),
+              );
+            }
+          },
+        ),
+      );
+    } else {
+      return CircularProgressIndicator();
+    }
   }
 }

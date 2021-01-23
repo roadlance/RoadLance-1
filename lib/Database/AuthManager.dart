@@ -40,4 +40,8 @@ class AuthManager {
   Future<User> getCurrentUser() async {
     return auth.currentUser;
   }
+
+  Future signOut() async {
+    await auth.signOut();
+  }
 }

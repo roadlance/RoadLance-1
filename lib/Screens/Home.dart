@@ -16,6 +16,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     setState(() {
+      tab = PostTab();
+    });
+  }
+
+  void onItemTapped(int index) {
+    print("New index is $index");
+    setState(() {
+      _selectedIndex = index;
+    });
+    setState(() {
       switch (_selectedIndex) {
         case 0:
           tab = PostTab();
@@ -28,13 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
           break;
         default:
       }
-    });
-  }
-
-  void onItemTapped(int index) {
-    print("New index is $index");
-    setState(() {
-      _selectedIndex = index;
     });
   }
 

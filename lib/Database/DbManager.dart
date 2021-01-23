@@ -5,6 +5,18 @@ class DatabaseManager {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  Future<int> getUserBalance() {
+    return firestore
+        .collection('Users')
+        .doc(auth.currentUser.uid)
+        .get()
+        .then((DocumentSnapshot snap) {
+      Map data = snap.data();
+      print("Data is ${data['CurrentBalance']}");
+      return data['CurrentBalance'];
+    });
+  }
+
   Future saveUserData(String firstName, String lastName, String fullName,
       String email, String phoneNumber) {
     CollectionReference usersRef =

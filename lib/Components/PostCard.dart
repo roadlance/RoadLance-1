@@ -98,8 +98,10 @@ class PostCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text('Upload Time: ',
-                        style: TextStyle(color: Colors.white)),
+                    Text(
+                      'Upload Time: ',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     Text(
                       '${getTime(post.uploadTime.toDate().toString())}',
                       style: TextStyle(
@@ -115,6 +117,21 @@ class PostCard extends StatelessWidget {
                         style: TextStyle(color: Colors.white)),
                     Text(
                       '${post.numberPlate}',
+                      style: TextStyle(
+                        color: Color(0xFF50fa7b),
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Status: ',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    Text(
+                      '${post.status}',
                       style: TextStyle(
                         color: Color(0xFF50fa7b),
                       ),

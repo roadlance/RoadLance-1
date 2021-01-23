@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../Components/AuthField.dart';
 import './Login.dart';
 import '../Database/AuthManager.dart';
+import 'Home.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -73,6 +74,14 @@ class _RegisterState extends State<Register> {
                         emailController.text,
                         passwordController.text,
                         phoneNumberController.text,
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                            showWelcomePopup: false,
+                          ),
+                        ),
                       );
                     },
                     color: Color(0xFF8be9fd),

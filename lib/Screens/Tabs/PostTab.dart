@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import '../../Models/Post.dart';
 import '../../Models/Locator.dart';
 import '../MediaPlayer.dart';
+import '../Success.dart';
 import 'dart:io';
 
 class PostTab extends StatefulWidget {
@@ -50,6 +51,8 @@ class _PostTabState extends State<PostTab> {
   double evidenceQuantity = 0;
   double numberPlatePresent = 0;
   double descriptionPresent = 0;
+  bool loadingBarVisible = false;
+  bool loadingButtonVisible = false;
 
   @override
   void initState() {
@@ -86,6 +89,7 @@ class _PostTabState extends State<PostTab> {
                           playButtonVisible: false,
                         ),
                       );
+                      loadingBarVisible = false;
                     });
                   },
                   icon: Icon(
@@ -115,6 +119,7 @@ class _PostTabState extends State<PostTab> {
                             mediaType: 'video',
                             playButtonVisible: true,
                           ));
+                          loadingBarVisible = false;
                         });
                       });
                   },
@@ -144,6 +149,7 @@ class _PostTabState extends State<PostTab> {
       setState(() {
         image = File(pickedFile.path);
         numberPlateVisible = true;
+        loadingBarVisible = true;
       });
       if (image != null) {
         print("Image successfully picked => $image");
@@ -300,6 +306,7 @@ class _PostTabState extends State<PostTab> {
     if (pickedFile != null) {
       setState(() {
         video = File(pickedFile.path);
+        loadingBarVisible = true;
       });
       if (video != null) {
         print("Video successfully picked => $video");
@@ -488,6 +495,15 @@ class _PostTabState extends State<PostTab> {
                       child: Text('Add Image/Video'),
                     ),
                   ),
+                  Visibility(
+                    visible: loadingBarVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Container(
+                          width: 50,
+                          child: Image.asset('assets/images/loading.gif')),
+                    ),
+                  ),
                   Column(
                     children: mediaFiles,
                   ),
@@ -611,8 +627,20 @@ class _PostTabState extends State<PostTab> {
                       ),
                     ),
                   ),
+                  Visibility(
+                    visible: loadingButtonVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Container(
+                          width: 50,
+                          child: Image.asset('assets/images/loading.gif')),
+                    ),
+                  ),
                   RaisedButton(
                     onPressed: () async {
+                      setState(() {
+                        loadingButtonVisible = true;
+                      });
                       DatabaseManager manager = DatabaseManager();
                       Locator locator = Locator();
                       Position currentPos = await locator.getCurrentPosition();
@@ -633,6 +661,11 @@ class _PostTabState extends State<PostTab> {
                       await manager.uploadFiles(files, now);
                       await manager.uploadNumberPlate(numberPlate);
                       await manager.uploadPostToPolice(post, now);
+                      setState(() {
+                        loadingButtonVisible = false;
+                      });
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Success()));
                     },
                     color: Color(0xFF8be9fd),
                     shape: RoundedRectangleBorder(

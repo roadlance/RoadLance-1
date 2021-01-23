@@ -25,16 +25,19 @@ class _PostDisplayState extends State<PostDisplay> {
     setMediaUrls();
   }
 
-  void setMediaUrls() async {
+  Future setMediaUrls() async {
     int idx = 0;
     widget.post.mediaUrls.forEach((url) {
       if (url != null) {
         setState(() {
-          mediaUrls.add(Padding(
+          mediaUrls.add(
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: widget.post.mediaDetails[idx]['mediaType'] == 'image'
                   ? SizedBox(width: 350, child: Image.network(url))
-                  : Text("Display video")));
+                  : Text("Display video"),
+            ),
+          );
           idx += 1;
         });
       }

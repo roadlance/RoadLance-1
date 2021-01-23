@@ -4,11 +4,46 @@ import './Tabs/PostTab.dart';
 import './Tabs/ProfileTab.dart';
 
 class HomeScreen extends StatefulWidget {
+  HomeScreen({
+    this.showWelcomePopup,
+  });
+
+  bool showWelcomePopup = false;
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void showWelcomePopup() {
+    String text = '''
+We're glad you're onboard with us! Here's how you can get started!
+
+1) Add Your First Post
+  -> Upon dismissing this popup, you'll be prompted to choose either video or image
+  -> Select the type of media you want to choose
+  -> Select the category of the violation using the dropdown
+  -> Write a description of the violation
+  -> Submit the violation to the traffic police by clicking the button!
+
+Easy isn't it? You can view our top contributors through the leaderboard from Home tab.
+View your recent posts from the home tab too!
+    ''';
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        child: Text(
+          'Welcome To RoadLance!',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Karla-Medium',
+            fontSize: 23,
+          ),
+        ),
+      ),
+    );
+  }
+
   int _selectedIndex = 0;
   Widget tab;
 

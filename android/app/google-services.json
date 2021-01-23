@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:181509771768:android:90295dc018d9e7c005c60d",
         "android_client_info": {
-          "package_name": "com.android.application"
+          "package_name": "com.example.RoadLance"
         }
       },
       "oauth_client": [

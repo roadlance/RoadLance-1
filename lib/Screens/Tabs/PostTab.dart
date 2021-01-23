@@ -26,6 +26,11 @@ class _PostTabState extends State<PostTab> {
     'Accidents',
     'Driving Vehicle Without License Plate',
   ];
+  List<String> violationsRequiringVideos = [
+    'Speed Limit Violation',
+    'Rash Driving',
+    'Accidents',
+  ];
   List<Widget> mediaFiles = [];
   String numberPlate = 'Scanning number plates..';
   String description = '';
@@ -165,31 +170,47 @@ class _PostTabState extends State<PostTab> {
 
         setState(() {
           numberPlate = numberPlateRef;
+          if (numberPlate == null || numberPlate == 'No Number Plate Found.') {
+            numberPlatePresent = 0;
+            chanceOfApproval = (evidenceQuantity * 0.35) +
+                (numberPlatePresent * 0.35) +
+                (descriptionPresent * 0.1);
+          } else {
+            numberPlatePresent = 100;
+            chanceOfApproval = (evidenceQuantity * 0.35) +
+                (numberPlatePresent * 0.35) +
+                (descriptionPresent * 0.1);
+          }
         });
+
+        print("IMAGES + VIDEOS IS ${images + videos}");
 
         switch (images + videos) {
           case 0:
             setState(() {
               evidenceQuantity = 0;
-              chanceOfApproval = (chanceOfApproval * 0.35) +
+              chanceOfApproval = (evidenceQuantity * 0.35) +
                   (numberPlatePresent * 0.35) +
                   (descriptionPresent * 0.1);
+              print("CHANCE OF APPROVAL IS $chanceOfApproval");
             });
             break;
           case 1:
             if (images == 1) {
               setState(() {
                 evidenceQuantity = 20;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             } else {
               setState(() {
                 evidenceQuantity = 30;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             }
             break;
@@ -197,23 +218,26 @@ class _PostTabState extends State<PostTab> {
             if (images == 1) {
               setState(() {
                 evidenceQuantity = 50;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             } else if (images == 2) {
               setState(() {
                 evidenceQuantity = 40;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             } else if (images == 0) {
               setState(() {
                 evidenceQuantity = 60;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             }
             break;
@@ -221,39 +245,44 @@ class _PostTabState extends State<PostTab> {
             if (images == 1) {
               setState(() {
                 evidenceQuantity = 80;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             } else if (images == 2) {
               setState(() {
                 evidenceQuantity = 70;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             } else if (images == 3) {
               setState(() {
                 evidenceQuantity = 60;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             } else {
               setState(() {
                 evidenceQuantity = 90;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
+                print("CHANCE OF APPROVAL IS $chanceOfApproval");
               });
             }
             break;
           default:
             setState(() {
               evidenceQuantity = 100;
-              chanceOfApproval = (chanceOfApproval * 0.35) +
+              chanceOfApproval = (evidenceQuantity * 0.35) +
                   (numberPlatePresent * 0.35) +
                   (descriptionPresent * 0.1);
+              print("CHANCE OF APPROVAL IS $chanceOfApproval");
             });
         }
       }
@@ -298,12 +327,12 @@ class _PostTabState extends State<PostTab> {
             numberPlate = 'No Number Plate Found.';
           });
         }
-
+        print("IMAGES + VIDEOS IS ${images + videos}");
         switch (images + videos) {
           case 0:
             setState(() {
               evidenceQuantity = 0;
-              chanceOfApproval = (chanceOfApproval * 0.35) +
+              chanceOfApproval = (evidenceQuantity * 0.35) +
                   (numberPlatePresent * 0.35) +
                   (descriptionPresent * 0.1);
             });
@@ -312,14 +341,14 @@ class _PostTabState extends State<PostTab> {
             if (images == 1) {
               setState(() {
                 evidenceQuantity = 20;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
             } else {
               setState(() {
                 evidenceQuantity = 30;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
@@ -329,21 +358,21 @@ class _PostTabState extends State<PostTab> {
             if (images == 1) {
               setState(() {
                 evidenceQuantity = 50;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
             } else if (images == 2) {
               setState(() {
                 evidenceQuantity = 40;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
             } else if (images == 0) {
               setState(() {
                 evidenceQuantity = 60;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
@@ -353,28 +382,28 @@ class _PostTabState extends State<PostTab> {
             if (images == 1) {
               setState(() {
                 evidenceQuantity = 80;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
             } else if (images == 2) {
               setState(() {
                 evidenceQuantity = 70;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
             } else if (images == 3) {
               setState(() {
                 evidenceQuantity = 60;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
             } else {
               setState(() {
                 evidenceQuantity = 90;
-                chanceOfApproval = (chanceOfApproval * 0.35) +
+                chanceOfApproval = (evidenceQuantity * 0.35) +
                     (numberPlatePresent * 0.35) +
                     (descriptionPresent * 0.1);
               });
@@ -383,7 +412,7 @@ class _PostTabState extends State<PostTab> {
           default:
             setState(() {
               evidenceQuantity = 100;
-              chanceOfApproval = (chanceOfApproval * 0.35) +
+              chanceOfApproval = (evidenceQuantity * 0.35) +
                   (numberPlatePresent * 0.35) +
                   (descriptionPresent * 0.1);
             });
@@ -418,7 +447,7 @@ class _PostTabState extends State<PostTab> {
                       style: TextStyle(color: Colors.deepPurple),
                       underline: Container(
                         height: 2,
-                        color: Colors.deepPurpleAccent,
+                        color: Color(0xFF50fa7b),
                       ),
                       items: violations
                           .map<DropdownMenuItem<String>>((String value) {
@@ -435,6 +464,13 @@ class _PostTabState extends State<PostTab> {
                       onChanged: (String newValue) {
                         setState(() {
                           violation = newValue;
+                          if (violationsRequiringVideos.contains(newValue)) {
+                            errorMessage =
+                                'Please Provide Additional Evidence For Given Category';
+                            errorVisible = true;
+                          } else {
+                            errorVisible = false;
+                          }
                         });
                       },
                     ),
@@ -500,6 +536,24 @@ class _PostTabState extends State<PostTab> {
                         onChanged: (String text) {
                           print("Description is $text");
                           description = text;
+                          if (text == '' || text == null) {
+                            setState(() {
+                              descriptionPresent = 0;
+                              chanceOfApproval = (evidenceQuantity * 0.35) +
+                                  (numberPlatePresent * 0.35) +
+                                  (descriptionPresent * 0.1);
+                              errorMessage = 'Please Provide a description';
+                              errorVisible = true;
+                            });
+                          } else {
+                            setState(() {
+                              descriptionPresent = 100;
+                              chanceOfApproval = (evidenceQuantity * 0.35) +
+                                  (numberPlatePresent * 0.35) +
+                                  (descriptionPresent * 0.1);
+                              errorVisible = false;
+                            });
+                          }
                         },
                         cursorColor: Color(0xFF50fa7b),
                         decoration: InputDecoration(
@@ -537,10 +591,23 @@ class _PostTabState extends State<PostTab> {
                   ),
                   Visibility(
                     visible: errorVisible,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(
+                          color: Color(0xFFff5555),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
-                      errorMessage,
+                      "Chance of Approval: ${chanceOfApproval.round()}%",
                       style: TextStyle(
-                        color: Color(0xFFff5555),
+                        color: Colors.white,
+                        fontSize: 16,
                       ),
                     ),
                   ),

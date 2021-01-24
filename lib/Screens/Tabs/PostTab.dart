@@ -491,12 +491,14 @@ class _PostTabState extends State<PostTab> {
                       onChanged: (String newValue) {
                         setState(() {
                           violation = newValue;
-                          if (violationsRequiringVideos.contains(newValue)) {
-                            errorMessage =
-                                'Please Provide Additional Evidence For Given Category';
-                            errorVisible = true;
-                          } else {
-                            errorVisible = false;
+                          if (videos == 0) {
+                            if (violationsRequiringVideos.contains(newValue)) {
+                              errorMessage =
+                                  'Please Provide Additional Evidence For Given Category';
+                              errorVisible = true;
+                            } else {
+                              errorVisible = false;
+                            }
                           }
                         });
                       },
@@ -627,12 +629,15 @@ class _PostTabState extends State<PostTab> {
                   ),
                   Visibility(
                     visible: errorVisible,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 15),
-                      child: Text(
-                        errorMessage,
-                        style: TextStyle(
-                          color: Color(0xFFff5555),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                        child: Text(
+                          errorMessage,
+                          style: TextStyle(
+                            color: Color(0xFFff5555),
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ),

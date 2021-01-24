@@ -18,6 +18,12 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color statusRoom = Colors.grey;
+    if (post.status == 'Approved') {
+      statusRoom = Color(0xFF50fa7b);
+    } else if (post.status == 'Declined') {
+      statusRoom = Color(0xFFff5555);
+    }
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -133,7 +139,7 @@ class PostCard extends StatelessWidget {
                     Text(
                       '${post.status}',
                       style: TextStyle(
-                        color: Color(0xFF50fa7b),
+                        color: statusRoom,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),

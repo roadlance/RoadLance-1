@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Tabs/HomeTab.dart';
+import './Home.dart';
 
 class Success extends StatefulWidget {
   @override
@@ -13,7 +13,10 @@ class _SuccessState extends State<Success> {
     Future.delayed(Duration(seconds: 3), () {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeTab()),
+        MaterialPageRoute(
+            builder: (context) => HomeScreen(
+                  tab: 1,
+                )),
       );
     });
   }

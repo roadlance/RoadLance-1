@@ -87,42 +87,47 @@ class _HomeTabState extends State<HomeTab> {
                   child: Text("Recent Uploads",
                       style: TextStyle(color: Colors.white, fontSize: 23)),
                 ),
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('Users')
-                      .doc(currentUser.uid)
-                      .collection('Posts')
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData || currentUser == null) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else {
-                      return ListView(
-                        shrinkWrap: true,
-                        children: snapshot.data.docs.map((
-                          QueryDocumentSnapshot document,
-                        ) {
-                          var data = document.data();
-                          return PostCard(
-                            post: Post(
-                              violation: data['Violation'],
-                              description: data['Description'],
-                              status: data['Status'],
-                              mediaUrls: data['Media-Urls'],
-                              mediaDetails: data['Media-Details'],
-                              numberPlate: data['NumberPlate'],
-                              latitude: data['Latitude'],
-                              longitude: data['Longitude'],
-                              uploadTime: data['UploadTime'],
-                            ),
-                          );
-                        }).toList(),
-                      );
-                    }
-                  },
+                Container(
+                  color: Colors.transparent,
+                  height: 550,
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('Users')
+                        .doc(currentUser.uid)
+                        .collection('Posts')
+                        .orderBy('UploadTime', descending: true)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData || currentUser == null) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView(
+                          shrinkWrap: true,
+                          children: snapshot.data.docs.map((
+                            QueryDocumentSnapshot document,
+                          ) {
+                            var data = document.data();
+                            return PostCard(
+                              post: Post(
+                                violation: data['Violation'],
+                                description: data['Description'],
+                                status: data['Status'],
+                                mediaUrls: data['Media-Urls'],
+                                mediaDetails: data['Media-Details'],
+                                numberPlate: data['NumberPlate'],
+                                latitude: data['Latitude'],
+                                longitude: data['Longitude'],
+                                uploadTime: data['UploadTime'],
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

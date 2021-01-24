@@ -7,9 +7,11 @@ import './Tabs/ProfileTab.dart';
 class HomeScreen extends StatefulWidget {
   HomeScreen({
     this.showWelcomePopup,
+    this.tab,
   });
 
   bool showWelcomePopup = false;
+  int tab = 0;
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }

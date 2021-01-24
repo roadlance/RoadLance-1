@@ -14,9 +14,10 @@ class _SuccessState extends State<Success> {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => HomeScreen(
-                  tab: 1,
-                )),
+          builder: (context) => HomeScreen(
+            tab: 1,
+          ),
+        ),
       );
     });
   }
@@ -35,6 +36,16 @@ class _SuccessState extends State<Success> {
                 color: Colors.white,
                 fontSize: 50,
                 fontFamily: 'Karla-Medium',
+              ),
+            ),
+            Center(
+              child: Text(
+                "Submitted to Police for approval!",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Karla-Medium',
+                ),
               ),
             ),
             Image.asset(

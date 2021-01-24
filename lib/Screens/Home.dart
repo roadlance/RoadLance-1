@@ -11,7 +11,7 @@ class HomeScreen extends StatefulWidget {
   });
 
   bool showWelcomePopup = false;
-  int tab = 0;
+  int tab;
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -25,7 +25,18 @@ class _HomeScreenState extends State<HomeScreen> {
         showWelcomePopup();
       } else {
         setState(() {
-          tab = PostTab();
+          switch (widget.tab) {
+            case 0:
+              tab = PostTab();
+              break;
+            case 1:
+              tab = HomeTab();
+              break;
+            case 2:
+              tab = ProfileTab();
+              break;
+            default:
+          }
         });
       }
     });
@@ -51,7 +62,7 @@ View your recent posts from the home tab too!
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) => Container(
-        height: 500,
+        height: 470,
         decoration: BoxDecoration(
           color: Color(0xFF4b4266),
           border: Border.all(
@@ -84,10 +95,9 @@ View your recent posts from the home tab too!
               child: Text(
                 text,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Karla-Medium',
-                  fontSize: 17,
-                ),
+                    color: Colors.white,
+                    fontFamily: 'Karla-Medium',
+                    fontSize: 14),
                 textAlign: TextAlign.justify,
               ),
             ),

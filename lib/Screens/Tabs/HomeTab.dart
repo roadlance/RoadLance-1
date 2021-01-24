@@ -89,7 +89,7 @@ class _HomeTabState extends State<HomeTab> {
                 ),
                 Container(
                   color: Colors.transparent,
-                  height: 550,
+                  height: 750,
                   child: StreamBuilder(
                     stream: FirebaseFirestore.instance
                         .collection('Users')

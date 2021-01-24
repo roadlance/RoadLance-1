@@ -27,6 +27,7 @@ class _PostDisplayState extends State<PostDisplay> {
 
   Future setMediaUrls() async {
     int idx = 0;
+
     widget.post.mediaUrls.forEach((url) {
       if (url != null) {
         setState(() {
@@ -34,7 +35,24 @@ class _PostDisplayState extends State<PostDisplay> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15),
               child: widget.post.mediaDetails[idx]['mediaType'] == 'image'
-                  ? SizedBox(width: 350, child: Image.network(url))
+                  ? SizedBox(
+                      width: 350,
+                      child: Image.network(
+                        url,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                    )
                   : Text("Display video"),
             ),
           );
@@ -73,8 +91,11 @@ class _PostDisplayState extends State<PostDisplay> {
                   ],
                 ),
               ),
-              Column(
-                children: mediaUrls,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  children: mediaUrls,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),

@@ -22,7 +22,7 @@ class Leaderboard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 20, bottom: 30),
               child: Image.asset(
-                'assets/images/trophy2.gif',
+                'assets/images/trophy.gif',
                 height: 150,
               ),
             ),
